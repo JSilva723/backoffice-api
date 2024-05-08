@@ -27,7 +27,7 @@ export class UnauthorizedError extends HttpError {
     }
 
     public static drop(message: string) {
-        return new BadRequestError(message)
+        return new UnauthorizedError(message)
     }
 }
 
@@ -39,7 +39,7 @@ export class ForbiddenError extends HttpError {
     }
 
     public static drop(message: string) {
-        return new BadRequestError(message)
+        return new ForbiddenError(message)
     }
 }
 
