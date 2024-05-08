@@ -30,6 +30,52 @@ export class Project {
             }
         })
 
+        router.get('/:id', verifyToken, async (req, res, next) => {
+            const id = Number(req.params.id)
+            try {
+                const item = await prisma.project.findMany({ where: { id } })
+                return res.json(item)
+            } catch (err) {
+                next(err)
+            }
+        })
+
+        router.post('/', verifyToken, async (req, res, next) => {
+            try {
+                const item = await prisma.project.create({ data: req.body })
+                return res.json(item)
+            } catch (err) {
+                next(err)
+            }
+        })
+
+        router.patch('/:id', verifyToken, async (req, res, next) => {
+            try {
+                const item = await prisma.project.update({
+                    where: {
+                        id: Number(req.params.id)
+                    },
+                    data: req.body
+                })
+                return res.json(item)
+            } catch (err) {
+                next(err)
+            }
+        })
+
+        router.delete('/:id', verifyToken, async (req, res, next) => {
+            try {
+                await prisma.project.delete({
+                    where: {
+                        id: Number(req.params.id)
+                    }
+                })
+                return res.sendStatus(204)
+            } catch (err) {
+                next(err)
+            }
+        })
+
         return router
     }
 }
