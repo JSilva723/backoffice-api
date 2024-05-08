@@ -7,7 +7,7 @@ import { ForbiddenError, HttpError, UnauthorizedError } from '@shared/errors'
 export function verifyToken(req: Request, _res: Response, next: NextFunction) {
     const header = req.header('Authorization') || ''
     const token = header.split(' ')[1]
-    if (!token) return next(UnauthorizedError.drop('Token not provied2'))
+    if (!token) return next(UnauthorizedError.drop('Token not provied'))
     try {
         jwt.verify(token, envs.JWT_SECRET)
         next()
