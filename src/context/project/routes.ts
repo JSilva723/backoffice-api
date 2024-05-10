@@ -1,7 +1,9 @@
-import { prisma } from '@config/dao'
-import { verifyToken } from '@presentation/middleware'
-import { PaginationDTO, getPagination } from '@shared/pagination'
 import { Router } from 'express'
+import { getAll } from './controller/get-all'
+import { getById } from './controller/get-by-id'
+import { create } from './controller/create'
+import { updateById } from './controller/update-by-id'
+import { deleteById } from './controller/delete-by-id'
 
 export class Project {
     static get prefix(): string {
@@ -11,69 +13,34 @@ export class Project {
     static get routes(): Router {
         const router = Router()
 
-        router.get('/', verifyToken, async (req, res, next) => {
-            const { page, pageSize, offset } = PaginationDTO(req.query, 2)
-            try {
-                const totalCount = await prisma.project.count()
-                const items = await prisma.project.findMany({ take: pageSize, skip: offset })
-                const pagination = await getPagination({
-                    page,
-                    pageSize,
-                    enpoint: Project.prefix,
-                    items,
-                    totalCount
-                })
-
-                return res.json(pagination)
-            } catch (err) {
-                next(err)
-            }
+        router.get('/', (req, res, next) => {
+            getAll(req.query)
+                .then(items => res.json(items))
+                .catch(error => next(error))
         })
 
-        router.get('/:id', verifyToken, async (req, res, next) => {
-            const id = Number(req.params.id)
-            try {
-                const item = await prisma.project.findMany({ where: { id } })
-                return res.json(item)
-            } catch (err) {
-                next(err)
-            }
+        router.get('/:id', (req, res, next) => {
+            getById(req.params.id)
+                .then(item => res.json(item))
+                .catch(error => next(error))
         })
 
-        router.post('/', verifyToken, async (req, res, next) => {
-            try {
-                const item = await prisma.project.create({ data: req.body })
-                return res.json(item)
-            } catch (err) {
-                next(err)
-            }
+        router.post('/', (req, res, next) => {
+            create(req.body)
+                .then(item => res.json(item))
+                .catch(error => next(error))
         })
 
-        router.patch('/:id', verifyToken, async (req, res, next) => {
-            try {
-                const item = await prisma.project.update({
-                    where: {
-                        id: Number(req.params.id)
-                    },
-                    data: req.body
-                })
-                return res.json(item)
-            } catch (err) {
-                next(err)
-            }
+        router.patch('/:id', (req, res, next) => {
+            updateById(req.params.id, req.body)
+                .then(item => res.json(item))
+                .catch(error => next(error))
         })
 
-        router.delete('/:id', verifyToken, async (req, res, next) => {
-            try {
-                await prisma.project.delete({
-                    where: {
-                        id: Number(req.params.id)
-                    }
-                })
-                return res.sendStatus(204)
-            } catch (err) {
-                next(err)
-            }
+        router.delete('/:id', (req, res, next) => {
+            deleteById(req.params.id)
+                .then(() => res.sendStatus(204))
+                .catch(error => next(error))
         })
 
         return router
