@@ -4,12 +4,10 @@ interface PaginationProps<T> {
     enpoint: string
     totalCount: number
     items: T[],
-    head: string[]
 }
 
 export interface Pagination<T> {
-    tableBody: T[],
-    tableHead: string[]
+    items: T[],
     pagination: {
         prev: string | null
         next: string | null
@@ -17,14 +15,13 @@ export interface Pagination<T> {
     }
 }
 
-export function getPagination<T>({ page, pageSize, enpoint, totalCount, items, head }: PaginationProps<T>): Pagination<T> {
+export function getPagination<T>({ page, pageSize, enpoint, totalCount, items }: PaginationProps<T>): Pagination<T> {
     const totalPages = Math.ceil(totalCount / pageSize)
     const hasNextPage = page < totalPages
     const hasPrevPage = page > 1
 
     return {
-        tableHead: head,
-        tableBody: items,
+        items,
         pagination: {
             prev: hasPrevPage ? `${enpoint}?page=${page - 1}&pageSize=${pageSize}` : null,
             next: hasNextPage ? `${enpoint}?page=${page + 1}&pageSize=${pageSize}` : null,
