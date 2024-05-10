@@ -12,7 +12,8 @@ export async function getAll(query: PaginationQuery): Promise<Pagination<Project
         pageSize,
         enpoint: ProjectRoutes.prefix,
         items: items.map(p => ProjectEntity.fromObject(p)),
-        totalCount
+        totalCount,
+        head: ['ID', 'Name']
     })
 
     return pagination
