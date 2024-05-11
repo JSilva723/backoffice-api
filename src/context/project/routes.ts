@@ -15,7 +15,7 @@ export class Project {
 
         router.get('/', (req, res, next) => {
             getAll(req.query)
-                .then(items => res.json(items))
+                .then(pagination => res.json(pagination))
                 .catch(error => next(error))
         })
 
@@ -38,8 +38,8 @@ export class Project {
         })
 
         router.delete('/:id', (req, res, next) => {
-            deleteById(req.params.id)
-                .then(() => res.sendStatus(204))
+            deleteById(req.params.id, req.query)
+                .then(pagination => res.json(pagination))
                 .catch(error => next(error))
         })
 

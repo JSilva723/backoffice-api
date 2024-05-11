@@ -1,7 +1,7 @@
 interface PaginationProps<T> {
     page: number
     pageSize: number
-    enpoint: string
+    endpoint: string
     totalCount: number
     items: T[],
 }
@@ -15,7 +15,7 @@ export interface Pagination<T> {
     }
 }
 
-export function getPagination<T>({ page, pageSize, enpoint, totalCount, items }: PaginationProps<T>): Pagination<T> {
+export function getPagination<T>({ page, pageSize, endpoint, totalCount, items }: PaginationProps<T>): Pagination<T> {
     const totalPages = Math.ceil(totalCount / pageSize)
     const hasNextPage = page < totalPages
     const hasPrevPage = page > 1
@@ -23,8 +23,8 @@ export function getPagination<T>({ page, pageSize, enpoint, totalCount, items }:
     return {
         items,
         pagination: {
-            prev: hasPrevPage ? `${enpoint}?page=${page - 1}&pageSize=${pageSize}` : null,
-            next: hasNextPage ? `${enpoint}?page=${page + 1}&pageSize=${pageSize}` : null,
+            prev: hasPrevPage ? `${endpoint}?page=${page - 1}&pageSize=${pageSize}` : null,
+            next: hasNextPage ? `${endpoint}?page=${page + 1}&pageSize=${pageSize}` : null,
             total: totalCount,
         },
     }

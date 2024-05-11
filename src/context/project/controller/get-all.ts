@@ -10,7 +10,7 @@ export async function getAll(query: PaginationQuery): Promise<Pagination<Project
     const pagination = getPagination({
         page,
         pageSize,
-        enpoint: ProjectRoutes.prefix,
+        endpoint: ProjectRoutes.prefix,
         items,
         totalCount,
     })

@@ -11,7 +11,7 @@ export class AppRoutes {
             return res.send({ msg: 'pong' })
         })
         router.use(User.routes)
-        router.use(Project.prefix, verifyToken, Project.routes)
+        router.use(Project.prefix, Project.routes)
         router.use(Tier.prefix, verifyToken, Tier.routes)
         router.use(errorHandler)
 
