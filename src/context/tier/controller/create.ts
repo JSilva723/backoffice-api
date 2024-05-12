@@ -16,7 +16,7 @@ export async function create(body: Tier): Promise<Project> {
         where: { id: projectId },
         include: {
             tiers: {
-                select: { name: true, price: true }
+                select: { id: true, name: true, price: true }
             }
         }
     })

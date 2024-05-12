@@ -24,11 +24,12 @@ model Project {
 }
 
 model Tier {
+    id    Int    @id @default(autoincrement())
     name      String  @db.VarChar(10)
     price     Float
     project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
     projectId Int     @map("project_id")
 
-    @@id([name, projectId])
+    @@unique([name, projectId])
     @@map("tiers")
 }

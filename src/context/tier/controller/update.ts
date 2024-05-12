@@ -6,48 +6,41 @@ interface Dict {
     [key: string]: string | number | null
 }
 
-interface UpdateDTO {
+interface Body {
     price?: number
     name?: string
 }
 
-function uodateDto(props: Dict): [string?, UpdateDTO?] {
-    const obj: Dict = {}
-    let error = null
-    for (const key in props) {
-        // Chek valids keys
-        if (['price', 'name'].includes(key)) {
-            if (key !== 'price') {
-                obj[key] = props[key]
-            } else {
-                // Validate type
-                const price = Number(props[key])
-                if (isNaN(price)) {
-                    // Set error
-                    error = 'The price must be number'
-                    break
-                } else {
-                    obj[key] = price
-                }
-            }
-        }
+export class UpdateDto {
+    constructor(
+        public readonly name?: string,
+        public readonly price?: number,
+    ) { }
+
+    get values() {
+        const obj: { [key: string]: string | number } = {}
+        if (this.name) obj.name = this.name
+        if (this.price) obj.price = this.price
+
+        return obj
     }
-    if (error) return [error, undefined]
-    if (Object.values(obj).length === 0) return ['The property for update are name or price', undefined]
-    return [undefined, obj]
+
+    static update(data: Body): [string?, UpdateDto?] {
+        const { name, price } = data
+        if (price && isNaN(Number(price))) return ['The price must be number', undefined]
+        return [undefined, new UpdateDto(name, Number(price))]
+    }
 }
 
 export async function update(query: Dict, body: Dict): Promise<Tier> {
-    const { name: _name, projectId: _projectId } = query
-    const name = String(_name)
+    const { id: _id, projectId: _projectId } = query
+    const id = Number(_id)
+    if (isNaN(id)) throw BadRequestError.drop('The ID must be number')
     const projectId = Number(_projectId)
     if (isNaN(projectId)) throw BadRequestError.drop('The project ID must be number')
-    const [error, updateDTO] = uodateDto(body)
+    const [error, updateDTO] = UpdateDto.update(body)
     if (error) throw BadRequestError.drop(error)
-    const tier = await prisma.tier.update({
-        where: { name_projectId: { name, projectId } },
-        data: updateDTO!
-    })
+    const tier = await prisma.tier.update({ where: { id }, data: updateDTO!.values })
 
     return tier
 }

@@ -15,7 +15,7 @@ export class Tier {
                 .catch(error => next(error))
         })
 
-        router.patch('/:projectId/update/:name', (req, res, next) => {
+        router.patch('/:projectId/update/:id', (req, res, next) => {
             update(req.params, req.body)
                 .then(item => res.json(item))
                 .catch(error => next(error))

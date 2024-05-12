@@ -8,7 +8,7 @@ export async function getById(paramId: string): Promise<ProjectEntity> {
     const [item] = await prisma.project.findMany({
         where: { id },
         include: {
-            tiers: { select: { name: true, price: true } }
+            tiers: { select: { id: true, name: true, price: true } }
         }
     })
 
