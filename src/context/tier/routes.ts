@@ -1,5 +1,6 @@
 import { Router } from 'express'
-import { prisma } from '@config/dao'
+import { create } from './controller/create'
+import { update } from './controller/update'
 
 export class Tier {
     static get prefix(): string {
@@ -8,24 +9,16 @@ export class Tier {
     static get routes(): Router {
         const router = Router()
 
-        router.post('/', async (req, res, next) => {
-            try {
-                const { name, price, projectId } = req.body
-                await prisma.tier.create({
-                    data: { name, price, projectId }
-                })
-                const [project] = await prisma.project.findMany({
-                    where: { id: projectId },
-                    include: {
-                        tiers: {
-                            select: { name: true, price: true }
-                        }
-                    }
-                })
-                return res.send(project)
-            } catch (err) {
-                next(err)
-            }
+        router.post('/', (req, res, next) => {
+            create(req.body)
+                .then(item => res.json(item))
+                .catch(error => next(error))
+        })
+
+        router.patch('/:projectId/update/:name', (req, res, next) => {
+            update(req.params, req.body)
+                .then(item => res.json(item))
+                .catch(error => next(error))
         })
 
         return router
