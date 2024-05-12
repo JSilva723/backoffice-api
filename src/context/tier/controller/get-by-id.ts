@@ -1,6 +1,6 @@
-import { BadRequestError } from "@shared/errors"
-import { Tier } from "../entity"
-import { prisma } from "@config/dao"
+import { BadRequestError } from '@shared/errors'
+import { Tier } from '../entity'
+import { prisma } from '@config/dao'
 
 export async function getById(paramId: string): Promise<Tier> {
     const id = Number(paramId)

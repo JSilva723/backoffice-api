@@ -11,7 +11,7 @@ interface Body {
     name?: string
 }
 
-export class UpdateDto {
+class UpdateDto {
     constructor(
         public readonly name?: string,
         public readonly price?: number,
