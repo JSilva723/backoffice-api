@@ -29,6 +29,5 @@ module.exports = {
     },
     target: 'node',
     externals: [nodeExternals()],
-    devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',
     plugins: [new CleanWebpackPlugin()],
 }

@@ -1,3 +1,5 @@
+import { BadRequestError } from './errors'
+
 interface PaginationProps<T> {
     page: number
     pageSize: number
@@ -36,8 +38,23 @@ export interface PaginationQuery {
 }
 
 export const PaginationDTO = (query: PaginationQuery, defaultPageSize = 5) => {
-    const _page = query.page ? Number(query.page) : 1
-    const _pageSize = query.pageSize ? Number(query.pageSize) : defaultPageSize
+    const { page, pageSize } = query
+    let _page = 1
+    let _pageSize = defaultPageSize
+    if (page) {
+        if (isNaN(Number(page))) {
+            throw BadRequestError.drop('Page must be number')
+        } else {
+            _page = Number(page)
+        }
+    }
+    if (pageSize) {
+        if (isNaN(Number(pageSize))) {
+            throw BadRequestError.drop('pageSize must be number')
+        } else {
+            _pageSize = Number(pageSize)
+        }
+    }
     const offset = (_page - 1) * _pageSize
 
     return { page: _page, pageSize: _pageSize, offset }

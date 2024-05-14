@@ -7,6 +7,7 @@ export class Tier {
     static get prefix(): string {
         return '/tier'
     }
+    
     static get routes(): Router {
         const router = Router()
 
